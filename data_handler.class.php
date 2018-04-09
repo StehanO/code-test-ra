@@ -1,8 +1,6 @@
 <?php
 
-require 'error_handler.class.php';
-
-Class DataHandler extends ErrorHandler {
+Class DataHandler {
 
 	private $file_data_records = array();
 	public $valid_data_records = array();
@@ -51,7 +49,13 @@ Class DataHandler extends ErrorHandler {
 					$error["name"] = "Incorrect Name/Surname Supplied";
 				}
 				# contact
-				$final_obj["contact_number"] = $record["contact_number"];
+				if (ErrorHandler::processContactDetails($record["contact_number"], $contact_number)) {
+					$final_obj["contact_number"] = $contact_number;
+				} else {
+					$final_obj["contact_number"] = $record["contact_number"];
+					$error["contact_number"] = "Incorrect Contact Number Supplied";
+				}
+				
 				# email
 				if (ErrorHandler::processEmail($record["email"], $email_return)) {
 					$final_obj["email"] = $email_return;

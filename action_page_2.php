@@ -1,55 +1,13 @@
 <?php
 
+require 'vendor/autoload.php';
+
 require 'simplexlsx.class.php';
 require 'file_handler.class.php';
+require 'error_handler.class.php';
 require 'data_handler.class.php';
 
-define(__UPLOAD_PATH__, 'assets/');
-
-function moveFile(&$target_file) {
-	$target_dir = __UPLOAD_PATH__;
-	$target_file = $target_dir . basename($_FILES["userfile"]["name"]);
-	$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-
-	if (move_uploaded_file($_FILES["userfile"]["tmp_name"], $target_file)) {
-		return true;
-	}
-}
-
-function write($spreadsheet) {
-	echo "writing";
-	
-	$writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
-	$writer->setDelimiter(',');
-	$writer->setEnclosure('');
-	$writer->setLineEnding("\r\n");
-	$writer->setSheetIndex(0);
-
-	$writer->save(__UPLOAD_PATH__ . "reworked.csv");
-}
-
-function simpleRead($target_file) {
-	echo "reading";
-	$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-	$reader->setReadDataOnly(true);
-	$spreadsheet = $reader->load($target_file);
-
-	return $spreadsheet;
-}
-
-if (moveFile($target_file)) {
-	if ($xlsx = SimpleXLSX::parse($target_file)) {		
-		$array_of_records = $xlsx->rows();		
-		if ($array_of_records != null) {			
-			$data_obj = new DataHandler($array_of_records);
-			if ($data_obj != null) {
-				$data_obj->init();
-			}
-		}
-	} else {
-		echo SimpleXLSX::parse_error();
-	}
-}
+require 'process_file_data.php';
 ?>
 
 <!DOCTYPE html>
@@ -113,7 +71,7 @@ if (moveFile($target_file)) {
 					<tbody>
 						<?						
 						$cnt = 0;
-						foreach($data_obj->getFinal() as $processed_data) {							
+						foreach($data_obj->getFinal() as $processed_data) {
 							$cnt++;
 							?>
 							<tr style="font-size: 11px">
@@ -133,7 +91,7 @@ if (moveFile($target_file)) {
 									}
 									if ($error_data != "") {
 										?>
-										<a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Errors Found" data-content="<?= $error_data ?>">
+										<a tabindex="0" role="button" class="hover" data-toggle="popover" data-trigger="hover" title="Errors Found" data-content="<?= $error_data ?>">
 											<i class="fa fa-exclamation-circle" style="color: #ffc107"></i>
 										</a>
 										<?
