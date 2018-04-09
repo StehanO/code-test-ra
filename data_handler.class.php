@@ -73,7 +73,7 @@ Class DataHandler {
 
 				$final_obj["error"] = $error;
 
-				$this->final_array[] = $final_obj;
+				$this->final_array[] = (object) $final_obj;
 			}
 		}
 	}
@@ -96,7 +96,7 @@ Class DataHandler {
 			$this->array_of_headings["contact_number"] = "Contact Number";
 			$this->array_of_headings["email"] = "Email";
 			$this->array_of_headings["join_date"] = "Date Joined";
-			$this->array_of_headings["error"] = "Errors";
+			$this->array_of_headings["error"] = "Report";
 		}
 	}
 

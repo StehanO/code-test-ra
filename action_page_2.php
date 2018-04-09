@@ -70,28 +70,28 @@ require 'process_file_data.php';
 					?>
 					<tbody>
 						<?						
-						$cnt = 0;
+						$cnt = 0;						
 						foreach($data_obj->getFinal() as $processed_data) {
 							$cnt++;
 							?>
 							<tr style="font-size: 11px">
 								<td><?= $cnt . "." ?></td>
-								<td><?= @$processed_data["name"] != "" ? $processed_data["name"] : "" ?></td>
-								<td><?= @$processed_data["surname"] != "" ? $processed_data["surname"] : "" ?></td>
-								<td><?= @$processed_data["contact_number"] != "" ? $processed_data["contact_number"] : "" ?></td>
-								<td><?= @$processed_data["email"] != "" ? $processed_data["email"] : "" ?></td>
-								<td><?= @$processed_data["joined_date"] != "" ? $processed_data["joined_date"] : "" ?></td>
+								<td><?= $processed_data->name != "" ? $processed_data->name : "" ?></td>
+								<td><?= $processed_data->surname != "" ? $processed_data->surname : "" ?></td>
+								<td><?= $processed_data->contact_number != "" ? $processed_data->contact_number : "" ?></td>
+								<td><?= $processed_data->email != "" ? $processed_data->email: "" ?></td>
+								<td><?= $processed_data->joined_date != "" ? $processed_data->joined_date : "" ?></td>
 								<td>
 									<?
-									if ($processed_data["error"] != "") {
+									if ($processed_data->error != "") {
 										$error_data = "";
-										foreach ($processed_data["error"] as $key => $value) {
+										foreach ($processed_data->error as $key => $value) {
 											$error_data .= $value . "</br>";
 										}
 									}
 									if ($error_data != "") {
 										?>
-										<a tabindex="0" role="button" class="hover" data-toggle="popover" data-trigger="hover" title="Errors Found" data-content="<?= $error_data ?>">
+										<a tabindex="0" role="button" class="hover" data-toggle="popover" data-trigger="hover" title="Incorrect Data Found" data-content="<?= $error_data ?>">
 											<i class="fa fa-exclamation-circle" style="color: #ffc107"></i>
 										</a>
 										<?
