@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 require 'simplexlsx.class.php';
-require 'file_handler.class.php';
+
 require 'error_handler.class.php';
 require 'data_handler.class.php';
 
@@ -48,10 +48,10 @@ require 'process_file_data.php';
 		<div class="login-form-content">
 			<?
 			if ($FError == "") {
-				$processed_data = $data_obj->getReport();			
+				$has_records = $data_obj->checkRecords();
 				$headings = $data_obj->getHeadings();
 
-				if ($processed_data != null) {	
+				if ($has_records) {	
 					?>
 					<table class="table">
 						<?

@@ -2,6 +2,12 @@
 
 Class ErrorHandler {
 
+	/**
+	 * Validate email address
+	 * @param string $email_address 
+	 * @param type &$processed_email 
+	 * @return boolean
+	 */
 	public static function processEmail(string $email_address, &$processed_email) {
 		// work around umlauts
 		$contains_umlauts = false;
@@ -13,7 +19,6 @@ Class ErrorHandler {
 			$email_address = str_replace(['ä','ö','ü'], ['ae','oe','ue'], $email_address);
 		}
 
-		
 		if (filter_var($email_address, FILTER_VALIDATE_EMAIL)) {
 			if (!$contains_umlauts) {
 				$processed_email = $email_address;
@@ -26,12 +31,17 @@ Class ErrorHandler {
 		}
 	}
 
+	/**
+	 * Check if the email domain exists
+	 * @param string $email_address 
+	 * @return boolean
+	 */
 	public static function processEmailDomain(string $email_address) {
 		if ($email_address != "") {
 			list($user_name, $mail_domain) = explode("@", $email_address);
 			$tld = explode('.', $mail_domain, 2)[1];
 			//echo "Domain: " . $tld . PHP_EOL;
-			if (checkdnsrr($mail_domain, 'A') && !in_array(gethostbyname($mail_domain), gethostbynamel('this_is_a_wrong_url_xx_xx_xx.' . $tld))) {
+			if (checkdnsrr($mail_domain, 'A')) {
 				return true;
 			} else {
 				return false;
@@ -39,6 +49,13 @@ Class ErrorHandler {
 		}
 	}
 
+	/**
+	 * Validate join date
+	 * @param string $date 
+	 * @param string $format 
+	 * @param type &$processed_date 
+	 * @return boolean
+	 */
 	public static function processDate(string $date, string $format, &$processed_date) {
 		try {
 			if ($date != "") {
@@ -49,11 +66,17 @@ Class ErrorHandler {
 			} else {
 				return false;
 			}
-		} catch (Exception $e) {			
+		} catch (Exception $e) {
 			return false;
 		}
 	}
 
+	/**
+	 * Validate and format contact number using composer package
+	 * @param string $contact_number 
+	 * @param type &$processed_contact_number 
+	 * @return boolean
+	 */
 	public static function processContactDetails(string $contact_number, &$processed_contact_number) {
 		if ($contact_number != "") {			
 			$contact_number = preg_replace('/\s+/', '', ($contact_number));
@@ -71,6 +94,12 @@ Class ErrorHandler {
 		}
 	}
 
+	/**
+	 * Validate and split name and surname. We assume that the first element is the firstname and ignore incorrect formats
+	 * @param string $name 
+	 * @param type &$name_container 
+	 * @return boolean
+	 */
 	public static function processName(string $name, &$name_container) {
 		if ($name != "") {
 			if (!preg_match("/^[a-zA-Z\s]+$/", $name)) {

@@ -5,23 +5,32 @@ Class DataHandler {
 	private $file_data_records = array();
 	public $valid_data_records = array();
 
-	public $final_array = array();
+	public $processed_data_source = array();
 	public $array_of_headings = array();
 
 	public function __construct(array $dataFromFile) {
 		$this->file_data_records = $dataFromFile;
 	}
 
+	/**
+	 * Init calls relavant functions to load and validate the details;
+	 * @return type
+	 */
 	public function init() {		
 		$this->buildReliableSource();
 		$this->setHeadings();
 		$this->validate();
 	}
 
+	/**
+	 * Compiles the given data source and populates an array of correct data
+	 * @return type
+	 */
 	private function buildReliableSource() {		
 		if ($this->file_data_records != null) {
-			for ($i=0; $i < count($this->file_data_records); $i++) {				
-				if ($this->file_data_records[$i][1] != "") { // check that the first element is not empty - as per example file
+			for ($i=0; $i < count($this->file_data_records); $i++) {
+				// check that the first element is not empty - as per example file
+				if ($this->file_data_records[$i][1] != "") { 
 					$this->valid_data_records[$i] = [
 						"name" => $this->file_data_records[$i][0], //Column A - Name						
 						"contact_number" => $this->file_data_records[$i][2], //Column C - Contanct Number
@@ -33,6 +42,11 @@ Class DataHandler {
 		}
 	}
 
+	/**
+	 * Parse the current data source to ErrorHandler class and populates the data source for display.
+	 * ErrorHandler return boolean for each record. Even if the data fails we store it for display.
+	 * @return type
+	 */
 	private function validate() {
 		if ($this->valid_data_records != null) {
 			//build obj
@@ -40,7 +54,7 @@ Class DataHandler {
 			foreach ($this->valid_data_records as $record) {
 				$final_obj = array();
 				$error = array();				
-				# name
+				// name
 				if (ErrorHandler::processName($record["name"], $name_array_return)) {
 					$final_obj["name"] = array_shift($name_array_return);
 					$final_obj["surname"] = implode(" ", $name_array_return);
@@ -48,7 +62,7 @@ Class DataHandler {
 					$final_obj["name"] = $record["name"];
 					$error["name"] = "Incorrect Name/Surname Supplied";
 				}
-				# contact
+				// contact
 				if (ErrorHandler::processContactDetails($record["contact_number"], $contact_number)) {
 					$final_obj["contact_number"] = $contact_number;
 				} else {
@@ -56,14 +70,14 @@ Class DataHandler {
 					$error["contact_number"] = "Incorrect Contact Number Supplied";
 				}
 				
-				# email
+				// email
 				if (ErrorHandler::processEmail($record["email"], $email_return)) {
 					$final_obj["email"] = $email_return;
 				} else {
 					$final_obj["email"] = $record["email"];
 					$error["email"] = "Incorrect Email Supplied";
 				}
-				# join date
+				// join date
 				if (ErrorHandler::processDate($record["join_date"], "Y-m-d", $date_return)) {
 					$final_obj["joined_date"] = $date_return;
 				} else {
@@ -72,22 +86,36 @@ Class DataHandler {
 				}
 
 				$final_obj["error"] = $error;
-
-				$this->final_array[] = (object) $final_obj;
+				// parse array to object
+				$this->processed_data_source[] = (object) $final_obj;
 			}
 		}
 	}
 
+	/**
+	 * Get processed data
+	 * @return array
+	 */
 	public function getFinal() {
-		return $this->final_array;
+		return $this->processed_data_source;
 	}
 
-	public function getReport() {		
-		if ($this->valid_data_records != null) {
-			return $this->valid_data_records;
+	/**
+	 * Check if the data source is not null bofore displaying data
+	 * @return array
+	 */
+	public function checkRecords() {		
+		if ($this->processed_data_source != null) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
+	/**
+	 * Sets table headings
+	 * @return type
+	 */
 	public function setHeadings() {
 		if ($this->valid_data_records != null) {
 			$this->array_of_headings = [];
@@ -100,38 +128,14 @@ Class DataHandler {
 		}
 	}
 
+	/**
+	 * Returns table headings
+	 * @return type
+	 */
 	public function getHeadings() {
 		if ($this->array_of_headings != null) {
 			return $this->array_of_headings;
 		}
-	}
-
-	private function populateError() {
-		return false;
-	}
-
-	private function setNameSurname() {
-		$array = [];
-		$cname = array_shift($array);
-		$string = implode(',', $array);
-	}
-
-	private function setContactNumber() {
-		$array = [];
-		$cname = array_shift($array);
-		$string = implode(',', $array);
-	}
-
-	private function setEmailNumber() {
-		$array = [];
-		$cname = array_shift($array);
-		$string = implode(',', $array);
-	}
-
-	private function setJoinDate() {
-		$array = [];
-		$cname = array_shift($array);
-		$string = implode(',', $array);
 	}
 }
 

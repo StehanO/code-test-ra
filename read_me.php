@@ -30,11 +30,15 @@
     <div class="background"></div>
     <div class="backdrop"></div>
     <div class="login-form-container" id="login-form">
-        <div class="login-form-content">
-            <p>
-                Please note:
-            </p>
-        </div>
+        <div class="login-form-content" style="font-size: 11px">
+            <h3>Please note:</h3>
+            <ul>
+                <li>1. Basic file validation only. Expecting the example file.</li>
+                <li>2. Did not process data after upload used data as if it came from an input field.</li>
+                <li>3. All errors per line is writin to the popups with hover trigger.</li>
+            </ul>
+        </p>
     </div>
+</div>
 </body>
 </html>
