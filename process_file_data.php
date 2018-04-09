@@ -1,5 +1,6 @@
 <?php 
 define(__UPLOAD_PATH__, 'assets/');
+$FError = "";
 
 function moveFile(&$target_file) {
 	$target_dir = __UPLOAD_PATH__;
@@ -13,7 +14,7 @@ function moveFile(&$target_file) {
 
 if (moveFile($target_file)) {
 	if ($xlsx = SimpleXLSX::parse($target_file)) {		
-		$array_of_records = $xlsx->rows();
+		$array_of_records = $xlsx->rows();		
 		if ($array_of_records != null) {			
 			$data_obj = new DataHandler($array_of_records);
 			if ($data_obj != null) {
@@ -21,6 +22,7 @@ if (moveFile($target_file)) {
 			}
 		}
 	} else {
-		echo SimpleXLSX::parse_error();
+		$FError = "Incorrect File Uploaded. Please select a valid data file. (.xlsx)";
+		unlink($target_file);
 	}
 }

@@ -1,10 +1,10 @@
 /** 
 	Visit: WebDevZoom.com 
-*/
+	*/
 
-(function($){
-	$(document).ready(function(){
-		
+	(function($){
+		$(document).ready(function(){
+			
 		// Show Password
 		$('#show-password').click(function()
 		{
@@ -27,7 +27,7 @@
 			return false;
 		});
 	});
-})(jQuery);
+	})(jQuery);
 
 
 // PLACEHOLDER IE
@@ -54,8 +54,8 @@ function replace_placeholder ()
 			if (input.hasAttribute('placeholder'))
 			{				
 				var placeholder_text = input.getAttribute('placeholder'),
-					input_type = input.getAttribute('type');
-					
+				input_type = input.getAttribute('type');
+				
 				input.value = placeholder_text;
 				input.placeholder_text = placeholder_text;
 				input.input_type = input_type;
