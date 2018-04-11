@@ -38,7 +38,7 @@ Class Record {
 	}
 
 	public function setErrors(array $errors) {
-		$this->errors = $errors;
+		$this->error = $errors;
 	}
 }
 
