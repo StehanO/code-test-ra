@@ -16,7 +16,7 @@ Class DataHandler {
 	 * Init calls relavant functions to load and validate the details;
 	 * @return type
 	 */
-	public function init() {		
+	public function init() {
 		$this->buildReliableSource();
 		$this->setHeadings();
 		$this->validate();
@@ -26,13 +26,13 @@ Class DataHandler {
 	 * Compiles the given data source and populates an array of correct data
 	 * @return type
 	 */
-	private function buildReliableSource() {		
+	private function buildReliableSource() {
 		if ($this->file_data_records != null) {
 			for ($i=0; $i < count($this->file_data_records); $i++) {
 				// check that the first element is not empty - as per example file
-				if ($this->file_data_records[$i][1] != "") { 
+				if ($this->file_data_records[$i][1] != "") {
 					$this->valid_data_records[$i] = [
-						"name" => $this->file_data_records[$i][0], //Column A - Name						
+						"name" => $this->file_data_records[$i][0], //Column A - Name
 						"contact_number" => $this->file_data_records[$i][2], //Column C - Contanct Number
 						"email" => $this->file_data_records[$i][3], //Column D - Email
 						"join_date" => $this->file_data_records[$i][6] //Column G - Join Date
@@ -52,42 +52,44 @@ Class DataHandler {
 			//build obj
 			array_shift($this->valid_data_records);
 			foreach ($this->valid_data_records as $record) {
-				$final_obj = array();
-				$error = array();				
+				$final_obj = new Record();
+				$error = array();
 				// name
 				if (ErrorHandler::processName($record["name"], $name_array_return)) {
-					$final_obj["name"] = array_shift($name_array_return);
-					$final_obj["surname"] = implode(" ", $name_array_return);
+					$final_obj->setName(array_shift($name_array_return));
+					$final_obj->setSurname(implode(" ", $name_array_return));
 				} else {
-					$final_obj["name"] = $record["name"];
+					$final_obj->setName($record["name"]);
 					$error["name"] = "Incorrect Name/Surname Supplied";
 				}
 				// contact
 				if (ErrorHandler::processContactDetails($record["contact_number"], $contact_number)) {
-					$final_obj["contact_number"] = $contact_number;
+					$final_obj->setContactNumber($contact_number);
 				} else {
-					$final_obj["contact_number"] = $record["contact_number"];
+					$final_obj->setContactNumber($record["contact_number"]);
 					$error["contact_number"] = "Incorrect Contact Number Supplied";
 				}
-				
+
 				// email
 				if (ErrorHandler::processEmail($record["email"], $email_return)) {
-					$final_obj["email"] = $email_return;
+					$final_obj->setEmail($email_return);
 				} else {
-					$final_obj["email"] = $record["email"];
+					$final_obj->setEmail($record["email"]);
 					$error["email"] = "Incorrect Email Supplied";
 				}
 				// join date
 				if (ErrorHandler::processDate($record["join_date"], "Y-m-d", $date_return)) {
-					$final_obj["joined_date"] = $date_return;
+					$final_obj->setJoinDate($date_return);
 				} else {
-					$final_obj["joined_date"] = $record["join_date"];
+					$final_obj->setJoinDate($record["join_date"]);
 					$error["join_date"] = "Incorrect Joined Date Supplied";
 				}
 
-				$final_obj["error"] = $error;
+				if ($error != null) {
+					$final_obj->setErrors($error);
+				}
 				// parse array to object
-				$this->processed_data_source[] = (object) $final_obj;
+				$this->processed_data_source[] = $final_obj;
 			}
 		}
 	}
@@ -104,7 +106,7 @@ Class DataHandler {
 	 * Check if the data source is not null bofore displaying data
 	 * @return array
 	 */
-	public function checkRecords() {		
+	public function checkRecords() {
 		if ($this->processed_data_source != null) {
 			return true;
 		} else {

@@ -4,6 +4,7 @@ require 'vendor/autoload.php';
 require 'simplexlsx.class.php';
 
 require 'error_handler.class.php';
+require 'record.class.php';
 require 'data_handler.class.php';
 
 require 'process_file_data.php';
@@ -26,7 +27,7 @@ require 'process_file_data.php';
 
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
 	<!-- <script src="script.js"></script> -->
 </head>
@@ -51,7 +52,7 @@ require 'process_file_data.php';
 				$has_records = $data_obj->checkRecords();
 				$headings = $data_obj->getHeadings();
 
-				if ($has_records) {	
+				if ($has_records) {
 					?>
 					<table class="table">
 						<?
@@ -59,7 +60,7 @@ require 'process_file_data.php';
 							?>
 							<thead style="font-size: 11px; text-align: left;">
 								<th>#</th>
-								<th><?= ucwords($headings["name"]) ?></th>							
+								<th><?= ucwords($headings["name"]) ?></th>
 								<th><?= ucwords($headings["surname"]) ?></th>
 								<th><?= ucwords($headings["contact_number"]) ?></th>
 								<th><?= ucwords($headings["email"]) ?></th>
@@ -70,8 +71,8 @@ require 'process_file_data.php';
 						}
 						?>
 						<tbody>
-							<?						
-							$cnt = 0;						
+							<?
+							$cnt = 0;
 							foreach($data_obj->getFinal() as $processed_data) {
 								$cnt++;
 								?>
@@ -104,13 +105,13 @@ require 'process_file_data.php';
 										?>
 									</td>
 								</tr>
-								<?							
+								<?
 							}
 							?>
 						</tbody>
 					</table>
 					<?
-				}			
+				}
 			} else {
 				echo $FError;
 			}
